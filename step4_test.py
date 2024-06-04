@@ -11,26 +11,37 @@ from scipy.spatial import distance_matrix
 
 if __name__ == '__main__':
 
-    torch.cuda.set_device(utils.get_avail_gpu()) # assign which gpu will be used (only linux works)
+    # 使用GPU
+    torch.cuda.set_device(utils.get_avail_gpu()) 
 
-    model_path = './models'
-    model_name = 'MeshSegNet_Max_15_classes_72samples_lr1e-2_best.tar'
+    # model_path = 'C:\\Users\\s6324\Desktop\\python_file\\MeshSegNet\\models'
+    # 要檢驗的模型
+    model_path = './models/'
+    model_name = 'Mesh_Segementation_MeshSegNet_15_classes_60samples_best.tar_best.tar'
 
-    mesh_path = '' # need to define
+    # 檢驗資料的路徑
+    # mesh_path = 'C:\\Users\\s6324\\Desktop\\python_file\\MeshSegNet\\augmentation_vtk_data' # need to define
+    mesh_path = './test/'
+
+    # 使用的檢驗資料
     test_list = pd.read_csv('test_list_1.csv')['Test ID'].values # need to change the test_list by users if you have your own test samples
-    test_mesh_filename = 'Sample_0{0}_d.vtp'
-    test_path = './test'
+    # test_mesh_filename = 'A0_Sample_0{0}_d.vtp'
+    # 檢驗資料檔案名稱
+    test_mesh_filename = 'Sample_{0}_predicted.vtp'
+    # test_path = './test'
+    # 檢驗結果輸出路徑
+    test_path = './test/'
     if not os.path.exists(test_path):
         os.mkdir(test_path)
 
     num_classes = 15
     num_channels = 15
 
-    # set model
+    # 設定模型的通道數和層數
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model = MeshSegNet(num_classes=num_classes, num_channels=num_channels).to(device, dtype=torch.float)
 
-    # load trained model
+    # 加載訓練模型
     checkpoint = torch.load(os.path.join(model_path, model_name), map_location='cpu')
     model.load_state_dict(checkpoint['model_state_dict'])
     del checkpoint
@@ -40,7 +51,7 @@ if __name__ == '__main__':
     torch.backends.cudnn.benchmark = True
     torch.backends.cudnn.enabled = True
 
-    # Testing
+    # 模型評估指標
     dsc = []
     sen = []
     ppv = []

@@ -1,5 +1,8 @@
+# os用來讀取、寫入文件檔
 import os
+# io處理文字、二進位、原始型別之檔案
 import numpy as np
+# torch用於機器學習
 import torch
 from torch.utils.data import DataLoader
 from torch.optim.lr_scheduler import StepLR
@@ -9,6 +12,7 @@ from Mesh_dataset import *
 from meshsegnet import *
 from losses_and_metrics_for_mesh import *
 import utils
+# pandas用於資料處理
 import pandas as pd
 
 if __name__ == '__main__':
@@ -19,11 +23,11 @@ if __name__ == '__main__':
     train_list = './train_list_1.csv'
     val_list = './val_list_1.csv'
     
-    previous_check_point_path = './models'
-    previous_check_point_name = 'latest_checkpoint.tar'
+    previous_check_point_path = './models/'
+    previous_check_point_name = 'latest_checkpoint_cont.tar'
     
     model_path = './models/'
-    model_name = 'Mesh_Segementation_MeshSegNet_15_classes_72samples' #remember to include the project title (e.g., ALV)
+    model_name = 'Mesh_Segementation_MeshSegNet_15_classes_60samples_best.tar_best.tar' #remember to include the project title (e.g., ALV)
     checkpoint_name = 'latest_checkpoint_cont.tar'
     
     num_classes = 15

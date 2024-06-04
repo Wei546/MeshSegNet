@@ -1,7 +1,12 @@
+# os用來讀取、寫入文件檔
 import os
+# numpy用於矩陣運算
 import numpy as np
+# torch用於機器學習
 import torch
+# DataLoader用於將資料集分成小批次
 from torch.utils.data import DataLoader
+# StepLR用於調整學習率
 from torch.optim.lr_scheduler import StepLR
 import torch.optim as optim
 import torch.nn as nn
@@ -9,28 +14,36 @@ from Mesh_dataset import *
 from meshsegnet import *
 from losses_and_metrics_for_mesh import *
 import utils
+# pandas用於資料處理
 import pandas as pd
 
 if __name__ == '__main__':
 
-    torch.cuda.set_device(utils.get_avail_gpu()) # assign which gpu will be used (only linux works)
-    use_visdom = True # if you don't use visdom, please set to False
+    #提供GPU設備
+    torch.cuda.set_device(utils.get_avail_gpu()) 
+    # 設定是否使用visdom，若不使用，請設為False 
+    # visdom是深度學習中的一個可視化工具，可以實時監控訓練過程
+    use_visdom = False
 
-    train_list = './train_list_1.csv' # use 1-fold as example
-    val_list = './val_list_1.csv' # use 1-fold as example
+    # 設定訓練集、驗證集的路徑
+    train_list = './validation_down_F/train_list_1.csv' # use 1-fold as example
+    val_list = './validation_down_F/val_list_1.csv' # use 1-fold as example
 
+    # 設定模型的儲存路徑
     model_path = './models/'
-    model_name = 'Mesh_Segementation_MeshSegNet_15_classes_60samples' # need to define
-    checkpoint_name = 'latest_checkpoint.tar'
+    model_name = 'Mesh_Segementation_MeshSegNet_15_classes_60samples_best_down_F.tar_best.tar' # need to define
+    checkpoint_name = 'latest_checkpoint_down_F.tar'
 
+    # 特徵數定義為15
     num_classes = 15
     num_channels = 15 #number of features
     num_epochs = 200
     num_workers = 0
+    # 設定訓練集、驗證集的批次大小
     train_batch_size = 10
     val_batch_size = 10
     num_batches_to_print = 20
-
+    # 設定學習率
     if use_visdom:
         # set plotter
         global plotter
@@ -40,14 +53,15 @@ if __name__ == '__main__':
     if not os.path.exists(model_path):
         os.mkdir(model_path)
 
-    # set dataset
+    # set dataset 
+    # Mesh_dataset負責準備輸入特徵和進一步增強資料以及計算相鄰矩陣
     training_dataset = Mesh_Dataset(data_list_path=train_list,
                                     num_classes=num_classes,
                                     patch_size=6000)
     val_dataset = Mesh_Dataset(data_list_path=val_list,
                                num_classes=num_classes,
                                patch_size=6000)
-
+    # DataLoader用於將資料集分成小批次
     train_loader = DataLoader(dataset=training_dataset,
                               batch_size=train_batch_size,
                               shuffle=True,

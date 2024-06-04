@@ -14,12 +14,12 @@ if __name__ == '__main__':
     gpu_id = utils.get_avail_gpu()
     torch.cuda.set_device(gpu_id) # assign which gpu will be used (only linux works)
 
-    model_path = './models'
-    model_name = 'MeshSegNet_Max_15_classes_72samples_lr1e-2_best.tar'
+    model_path = './models/'
+    model_name = 'Mesh_Segementation_MeshSegNet_15_classes_60samples_best.tar_best.tar'
 
-    mesh_path = './'  # need to define
-    sample_filenames = ['Example.stl'] # need to define
-    output_path = './outputs'
+    mesh_path = './input_stl/'  # need to define
+    sample_filenames = ['1_up.stl'] # need to define
+    output_path = './outputs/'
     if not os.path.exists(output_path):
         os.mkdir(output_path)
 
